@@ -1,53 +1,119 @@
-CineMatch: Indian Movie Recommendation System
-A Netflix-style movie recommender that suggests Indian movies from a user's ratings, watch history, favourite genres and the behaviour of similar viewers. It combines supervised, unsupervised and advanced machine learning.
-Machine learning used
-Type
-Technique
-Job in the project
-Unsupervised
-K-Means (k = 4), PCA
-Groups users with similar taste; plots clusters in 2D
-Supervised
-Random Forest (baselines: Linear Regression, KNN)
-Predicts the star rating a user would give
-Advanced
-SVD matrix factorization, neural network (MLP)
-Finds hidden taste factors, re-ranks results
-Final score = 40% genre fit + 20% group affinity + 20% SVD + 20% Random Forest.
-Folder structure
-cinematch/
-├── frontend/
-│   └── index.html          Netflix-style UI + ML lab tab
+# Movie Recommendation System
+
+## 1. Project Overview
+
+The Movie Recommendation System is a machine learning-based web application designed to recommend movies based on user preferences, ratings, and movie similarities.
+
+The system provides a simple web interface where users can explore movies and receive recommendations.
+
+## 2. Objectives
+
+- Recommend relevant movies based on user preferences.
+- Apply Machine Learning techniques to movie data.
+- Analyze movie ratings and similarities.
+- Provide a user-friendly web interface.
+- Demonstrate practical applications of Machine Learning.
+
+## 3. Technologies Used
+
+- **Programming Language:** Python
+- **Machine Learning:** Scikit-learn
+- **Data Processing:** Pandas
+- **Backend:** Flask
+- **Frontend:** HTML, CSS, JavaScript
+- **Dataset:** CSV movie and rating files
+- **Development Tool:** Visual Studio Code
+
+## 4. Project Structure
+
+```text
+StoryWorld/
 ├── backend/
-│   ├── app.py              Flask API (trains the models, serves /api/recommend)
-│   ├── movies.csv          20 Indian movies with genre columns
-│   ├── ratings.csv         360 users, 3,960 synthetic ratings
-│   ├── make_data.py        regenerates the two CSV files
+│   ├── app.py
+│   ├── make_data.py
+│   ├── movies.csv
+│   ├── ratings.csv
 │   └── requirements.txt
+├── frontend/
+│   ├── index.html
+│   └── ml.html
 ├── notebooks/
-│   └── analysis.ipynb      charts and metrics for the report
+│   └── analysis.ipynb
 ├── .gitignore
 └── README.md
-Setup (VS Code terminal, from the cinematch folder)
-python -m venv venv
-venv\Scripts\activate            # Windows
-# source venv/bin/activate       # macOS / Linux
+```
+
+## 5. Main Features
+
+- Movie dataset processing
+- Movie recommendation functionality
+- Rating-based movie analysis
+- Machine Learning experimentation
+- Web-based user interface
+- Movie data analysis
+
+## 6. Installation and Setup
+
+### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/avishkar-ghorpade/Movie-recommendation-system.git
+```
+
+### Step 2: Open the Project Folder
+
+```bash
+cd Movie-recommendation-system
+```
+
+### Step 3: Create a Virtual Environment
+
+```bash
+py -m venv .venv
+```
+
+### Step 4: Activate the Environment on Windows
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### Step 5: Install Dependencies
+
+```bash
 pip install -r backend/requirements.txt
-Run
-Start the API:
-cd backend
-python app.py
-It prints the Random Forest test RMSE and serves http://127.0.0.1:5000.
-Health check: open http://127.0.0.1:5000/api/health.
-Open frontend/index.html with the Live Server extension.
-The top-right pill shows Live ML API when the backend is connected. Without the backend the page runs in Demo mode with a built-in ranking.
-Notebook
-Open notebooks/analysis.ipynb in VS Code, pick the venv interpreter as the kernel, and choose Run All. It produces the rating histogram, genre chart, elbow and silhouette curves, PCA cluster plot, model comparison, feature importance, training curve and Precision@K.
-API
-POST /api/recommend
-{ "ratings": { "0": 5, "1": 5 }, "genres": ["Action"] }
-Returns every unrated movie with score, pred (predicted stars) and the score components content, group, svd, rf.
-Notes
-ratings.csv is synthetic (generated from four viewer groups). Replace it with real ratings, such as a survey or MovieLens, for a real evaluation.
-Movie ids in movies.csv (0 to 19) must match the ids in frontend/index.html.
-The ML lab charts in the frontend show sample values. Replace them with the numbers from the notebook.
+```
+
+### Step 6: Run the Application
+
+```bash
+py backend/app.py
+```
+
+Open the local URL displayed in the terminal. It may be `http://127.0.0.1:5000`.
+
+## 7. Dataset
+
+The project includes CSV files containing movie information and ratings. These files support movie analysis and recommendation processing.
+
+## 8. Expected Outcome
+
+The application helps users discover movies that match their interests using the available movie data and recommendation logic.
+
+## 9. Future Enhancements
+
+- Personalized recommendations based on user history
+- Improved recommendation algorithms
+- Movie posters and detailed movie information
+- Cloud deployment
+- Responsive design for mobile devices
+
+## 10. Author
+
+**Project:** Movie Recommendation System
+
+**Purpose:** Academic and Machine Learning Project
+
+## 11. License
+
+This project is intended for educational and learning purposes.
