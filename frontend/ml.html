@@ -1,0 +1,579 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StoryWorld | Hybrid ML Lab</title>
+
+    <style>
+        :root {
+            --bg: #111111;
+            --panel: #1e1e1e;
+            --panel2: #292929;
+            --border: #383838;
+            --text: #f5f5f5;
+            --muted: #b8b8b8;
+            --accent: #e50914;
+            --green: #36c98f;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        header {
+            padding: 22px 5%;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            color: var(--accent);
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        header a {
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .back-link {
+            border: 1px solid var(--border);
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+
+        main {
+            max-width: 1250px;
+            margin: auto;
+            padding: 35px 24px 60px;
+        }
+
+        h1 {
+            font-size: clamp(30px, 5vw, 48px);
+            margin: 0 0 15px;
+        }
+
+        h2 {
+            margin-top: 35px;
+            font-size: 28px;
+        }
+
+        h3 {
+            margin-top: 0;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            padding: 25px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 17px;
+        }
+
+        select, button {
+            font-size: 16px;
+            padding: 14px 16px;
+            border-radius: 8px;
+        }
+
+        select {
+            width: 100%;
+            color: white;
+            background: var(--panel2);
+            border: 1px solid #444;
+            margin-bottom: 18px;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: 0;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #bd0710;
+        }
+
+        button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 18px;
+            background: var(--panel2);
+            padding: 14px;
+            border-radius: 8px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .error {
+            color: #ff8e8e;
+        }
+
+        .success {
+            color: var(--green);
+        }
+
+        .models {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 15px;
+            margin: 22px 0;
+        }
+
+        .model-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 18px;
+            border-radius: 12px;
+        }
+
+        .model-card .number {
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+
+        .model-card p {
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .movie-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            min-width: 0;
+        }
+
+        .movie-card h3 {
+            font-size: 21px;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .movie-meta {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .bar {
+            height: 8px;
+            border-radius: 10px;
+            background: #393939;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 9px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 5px 4px 0 0;
+            color: #ddd;
+        }
+
+        .method {
+            display: inline-block;
+            background: #243d32;
+            color: #a8f0cc;
+            border-radius: 7px;
+            padding: 8px 11px;
+            margin: 5px 5px 5px 0;
+            font-size: 13px;
+        }
+
+        .empty {
+            color: var(--muted);
+            padding: 22px 0;
+            line-height: 1.7;
+        }
+
+        footer {
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            padding: 24px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            main {
+                padding: 25px 15px 40px;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            header {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a class="logo" href="/">STORYWORLD</a>
+        <a class="back-link" href="/">← Back to Home</a>
+    </header>
+
+    <main>
+        <h1>Hybrid Machine Learning Lab</h1>
+
+        <p class="subtitle">
+            Discover movies using a hybrid recommendation system that combines
+            content similarity, K-Means clustering and Random Forest rating
+            predictions. The models use your movies.csv dataset.
+        </p>
+
+        <section class="panel">
+            <label for="movieSelect">Choose a movie</label>
+
+            <select id="movieSelect">
+                <option value="">Loading movies from movies.csv...</option>
+            </select>
+
+            <button id="recommendButton" disabled>
+                Find Hybrid Recommendations
+            </button>
+
+            <div id="status" class="status" role="status" aria-live="polite">
+                Connecting to the movie dataset...
+            </div>
+        </section>
+
+        <h2>ML Techniques Used</h2>
+
+        <div class="models">
+            <div class="model-card">
+                <div class="number">01</div>
+                <h3>TF-IDF + Cosine Similarity</h3>
+                <p>Compares movie genre and language features to estimate content similarity.</p>
+            </div>
+
+            <div class="model-card">
+                <div class="number">02</div>
+                <h3>K-Means Clustering</h3>
+                <p>Groups movies using genre, year and language features.</p>
+            </div>
+
+            <div class="model-card">
+                <div class="number">03</div>
+                <h3>Random Forest</h3>
+                <p>Predicts ratings using the supplied movie features and avg rating target.</p>
+            </div>
+
+            <div class="model-card">
+                <div class="number">04</div>
+                <h3>Hybrid Ranking</h3>
+                <p>Combines similarity, predicted rating and cluster membership to rank candidates.</p>
+            </div>
+        </div>
+
+        <h2 id="resultsHeading">Recommended Movies</h2>
+
+        <div id="selectedInfo" class="status" hidden></div>
+
+        <div id="techniqueList"></div>
+
+        <div id="results" class="results">
+            <p class="empty">
+                Select a movie above and click Find Hybrid Recommendations.
+            </p>
+        </div>
+    </main>
+
+    <footer>
+        StoryWorld Hybrid ML Lab · Recommendations generated from your CSV dataset
+    </footer>
+
+    <script>
+        const movieSelect = document.getElementById("movieSelect");
+        const recommendButton = document.getElementById("recommendButton");
+        const statusBox = document.getElementById("status");
+        const resultsBox = document.getElementById("results");
+        const selectedInfo = document.getElementById("selectedInfo");
+        const techniqueList = document.getElementById("techniqueList");
+
+        function setStatus(message, type = "") {
+            statusBox.textContent = message;
+            statusBox.className = "status " + type;
+        }
+
+        function addTextElement(parent, tag, text, className = "") {
+            const element = document.createElement(tag);
+            element.textContent = text;
+            if (className) element.className = className;
+            parent.appendChild(element);
+            return element;
+        }
+
+        async function loadMovies() {
+            recommendButton.disabled = true;
+            movieSelect.innerHTML = "";
+
+            const placeholder = document.createElement("option");
+            placeholder.value = "";
+            placeholder.textContent = "Loading movies...";
+            movieSelect.appendChild(placeholder);
+
+            try {
+                const response = await fetch("/api/movies");
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Unable to load movies.");
+                }
+
+                if (!Array.isArray(data.movies) || data.movies.length === 0) {
+                    throw new Error("No movies were found in movies.csv.");
+                }
+
+                movieSelect.innerHTML = "";
+
+                const firstOption = document.createElement("option");
+                firstOption.value = "";
+                firstOption.textContent = "Choose a movie";
+                movieSelect.appendChild(firstOption);
+
+                data.movies.forEach(movie => {
+                    const option = document.createElement("option");
+                    option.value = movie.movieId ?? movie.id;
+                    option.textContent =
+                        `${movie.title} (${movie.year}) · ${movie.language}`;
+                    movieSelect.appendChild(option);
+                });
+
+                recommendButton.disabled = false;
+                setStatus(
+                    `${data.movies.length} movies loaded successfully from your CSV.`,
+                    "success"
+                );
+            } catch (error) {
+                console.error("Movie loading failed:", error);
+                setStatus("Error: " + error.message, "error");
+
+                movieSelect.innerHTML = "";
+                const option = document.createElement("option");
+                option.value = "";
+                option.textContent = "Could not load movies";
+                movieSelect.appendChild(option);
+            }
+        }
+
+        function renderRecommendations(data) {
+            resultsBox.innerHTML = "";
+            techniqueList.innerHTML = "";
+
+            if (data.selected_movie) {
+                selectedInfo.hidden = false;
+                selectedInfo.textContent =
+                    `Selected movie: ${data.selected_movie}` +
+                    ` · K-Means cluster: ${data.selected_cluster}`;
+            }
+
+            if (Array.isArray(data.techniques)) {
+                data.techniques.forEach(technique => {
+                    addTextElement(techniqueList, "span", technique, "method");
+                });
+            }
+
+            if (!Array.isArray(data.recommendations) ||
+                data.recommendations.length === 0) {
+                addTextElement(
+                    resultsBox,
+                    "p",
+                    "No recommendations were returned for this movie.",
+                    "empty"
+                );
+                return;
+            }
+
+            data.recommendations.forEach((movie, index) => {
+                const card = document.createElement("article");
+                card.className = "movie-card";
+
+                addTextElement(card, "h3", `${index + 1}. ${movie.title}`);
+                addTextElement(
+                    card,
+                    "div",
+                    `${movie.year} · ${movie.language} · Dataset rating ${movie.avg}/5`,
+                    "movie-meta"
+                );
+
+                const genres = Array.isArray(movie.genres) ? movie.genres : [];
+                const tagContainer = document.createElement("div");
+
+                if (genres.length) {
+                    genres.forEach(genre => {
+                        addTextElement(tagContainer, "span", genre, "tag");
+                    });
+                } else {
+                    addTextElement(tagContainer, "span", "Genre not specified", "tag");
+                }
+
+                card.appendChild(tagContainer);
+
+                addTextElement(
+                    card,
+                    "div",
+                    `Predicted rating: ${Number(movie.predicted_rating).toFixed(2)} / 5`,
+                    "score-row"
+                );
+
+                addTextElement(
+                    card,
+                    "div",
+                    `Content similarity: ${Number(movie.similarity).toFixed(1)}%`,
+                    "score-row"
+                );
+
+                const similarityBar = document.createElement("div");
+                similarityBar.className = "bar";
+
+                const similarityFill = document.createElement("div");
+                similarityFill.className = "bar-fill";
+                similarityFill.style.width =
+                    Math.max(0, Math.min(100, Number(movie.similarity) || 0)) + "%";
+
+                similarityBar.appendChild(similarityFill);
+                card.appendChild(similarityBar);
+
+                addTextElement(
+                    card,
+                    "div",
+                    `Hybrid score: ${Number(movie.hybrid_score).toFixed(1)}%`,
+                    "score-row"
+                );
+
+                const hybridBar = document.createElement("div");
+                hybridBar.className = "bar";
+
+                const hybridFill = document.createElement("div");
+                hybridFill.className = "bar-fill";
+                hybridFill.style.width =
+                    Math.max(0, Math.min(100, Number(movie.hybrid_score) || 0)) + "%";
+
+                hybridBar.appendChild(hybridFill);
+                card.appendChild(hybridBar);
+
+                addTextElement(
+                    card,
+                    "div",
+                    `K-Means cluster: ${movie.cluster}`,
+                    "movie-meta"
+                );
+
+                resultsBox.appendChild(card);
+            });
+        }
+
+        async function getRecommendations() {
+            const movieId = movieSelect.value;
+
+            if (movieId === "") {
+                setStatus("Please select a movie first.", "error");
+                return;
+            }
+
+            recommendButton.disabled = true;
+            recommendButton.textContent = "Training models and ranking...";
+
+            resultsBox.innerHTML = "";
+            techniqueList.innerHTML = "";
+            selectedInfo.hidden = true;
+
+            setStatus("Generating recommendations using the Hybrid ML pipeline...");
+
+            try {
+                const response = await fetch(
+                    `/api/recommend?movie_id=${encodeURIComponent(movieId)}`
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Recommendation request failed.");
+                }
+
+                renderRecommendations(data);
+
+                setStatus(
+                    `Recommendations generated for ${data.selected_movie}.`,
+                    "success"
+                );
+            } catch (error) {
+                console.error("Recommendation failed:", error);
+                setStatus("Error: " + error.message, "error");
+                resultsBox.innerHTML = "";
+                addTextElement(resultsBox, "p", error.message, "empty");
+            } finally {
+                recommendButton.disabled = false;
+                recommendButton.textContent = "Find Hybrid Recommendations";
+            }
+        }
+
+        recommendButton.addEventListener("click", getRecommendations);
+
+        loadMovies();
+    </script>
+</body>
+</html>

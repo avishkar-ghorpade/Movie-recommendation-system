@@ -1,0 +1,21 @@
+movieId,title,year,avg,language,Action,Sci-Fi,Romance,Comedy,Drama,Thriller,Family,Horror
+0,RRR,2022,4.7,Telugu,1,0,0,0,1,0,0,0
+1,Enthiran,2010,4.1,Tamil,1,1,0,0,0,0,0,0
+2,Baahubali 2,2017,4.5,Telugu,1,0,0,0,1,0,0,0
+3,3 Idiots,2009,4.6,Hindi,0,0,0,1,1,0,0,0
+4,Dangal,2016,4.6,Hindi,0,0,0,0,1,0,1,0
+5,Dilwale Dulhania Le Jayenge,1995,4.5,Hindi,0,0,1,1,0,0,0,0
+6,Drishyam,2015,4.5,Malayalam,0,0,0,0,1,1,0,0
+7,KGF Chapter 2,2022,4.3,Kannada,1,0,0,0,1,0,0,0
+8,Sairat,2016,4.4,Marathi,0,0,1,0,1,0,0,0
+9,Kantara,2022,4.5,Kannada,1,0,0,0,1,1,0,0
+10,Vikram,2022,4.3,Tamil,1,0,0,0,0,1,0,0
+11,Jawan,2023,4.0,Hindi,1,0,0,0,0,1,0,0
+12,PK,2014,4.4,Hindi,0,1,0,1,0,0,0,0
+13,Koi Mil Gaya,2003,4.0,Hindi,0,1,0,0,0,0,1,0
+14,Stree,2018,4.2,Hindi,0,0,0,1,0,0,0,1
+15,Tumbbad,2018,4.5,Hindi,0,0,0,0,1,0,0,1
+16,Jab We Met,2007,4.4,Hindi,0,0,1,1,0,0,0,0
+17,Andhadhun,2018,4.6,Hindi,0,0,0,1,0,1,0,0
+18,Lagaan,2001,4.5,Hindi,0,0,0,0,1,0,1,0
+19,Fandry,2013,4.3,Marathi,0,0,0,0,1,0,0,0

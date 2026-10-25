@@ -1,0 +1,656 @@
+```html
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#141414">
+  <title>CineMatch - Indian Movie Recommender</title>
+
+  <style>
+    :root {
+      --bg: #141414;
+      --surface: #202020;
+      --surface2: #303030;
+      --text: #f5f5f5;
+      --muted: #aaa;
+      --red: #e50914;
+      --green: #46d369;
+      --border: #393939;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 14px 5%;
+      background: rgba(20,20,20,.97);
+      border-bottom: 1px solid #292929;
+    }
+
+    .logo {
+      color: var(--red);
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    .nav a, .nav button {
+      color: #bbb;
+      text-decoration: none;
+      background: none;
+      border: 0;
+      padding: 7px 0;
+      font-size: 14px;
+    }
+
+    .nav a:hover, .nav button:hover { color: white; }
+
+    .ml-link {
+      background: var(--red) !important;
+      color: white !important;
+      padding: 9px 12px !important;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .search {
+      width: 200px;
+      padding: 9px 12px;
+      border: 1px solid #555;
+      border-radius: 5px;
+      background: #222;
+      color: white;
+    }
+
+    .hero {
+      min-height: 400px;
+      padding: 75px 5% 45px;
+      display: flex;
+      align-items: flex-end;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.92), rgba(0,0,0,.35)),
+        linear-gradient(0deg, #141414 0%, transparent 70%),
+        url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1800&q=80")
+        center/cover;
+    }
+
+    .hero-content { max-width: 650px; }
+
+    .eyebrow {
+      color: #ff5159;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 7vw, 65px);
+      line-height: 1.05;
+      margin: 12px 0;
+    }
+
+    .hero p {
+      max-width: 560px;
+      color: #ddd;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 5px;
+      padding: 11px 18px;
+      font-weight: bold;
+      margin: 8px 7px 0 0;
+    }
+
+    .primary { background: white; color: black; }
+    .secondary { background: #444; color: white; }
+    .red { background: var(--red); color: white; }
+
+    main { padding: 25px 5% 50px; }
+    .section { margin: 25px 0 40px; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    h2 { font-size: 23px; margin: 0; }
+    .muted { color: var(--muted); font-size: 14px; }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 15px 0 20px;
+    }
+
+    .chip {
+      border: 1px solid #444;
+      border-radius: 30px;
+      padding: 7px 14px;
+      color: white;
+      background: transparent;
+    }
+
+    .chip.active, .chip:hover {
+      background: var(--red);
+      border-color: var(--red);
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .movie {
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid #292929;
+    }
+
+    .poster {
+      min-height: 185px;
+      padding: 20px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(145deg, #592323, #171717);
+      font-size: 23px;
+      font-weight: 900;
+    }
+
+    .movie-info { padding: 12px; }
+    .movie h3 { font-size: 16px; margin: 0 0 6px; }
+    .movie-meta { font-size: 12px; color: var(--muted); }
+    .rating { color: var(--green); font-weight: bold; }
+
+    .movie-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .small-btn {
+      flex: 1;
+      padding: 7px 4px;
+      border: 1px solid #555;
+      background: #303030;
+      color: white;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .small-btn:hover {
+      background: var(--red);
+      border-color: var(--red);
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px;
+    }
+
+    .preferences {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
+      margin: 18px 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    select {
+      display: block;
+      width: 100%;
+      margin-top: 6px;
+      padding: 11px;
+      color: white;
+      background: #303030;
+      border: 1px solid #555;
+      border-radius: 5px;
+    }
+
+    .message {
+      padding: 12px;
+      margin: 15px 0;
+      background: #292929;
+      border-radius: 5px;
+      overflow-wrap: anywhere;
+    }
+
+    .empty {
+      padding: 25px;
+      color: var(--muted);
+      border: 1px dashed #555;
+      border-radius: 8px;
+      text-align: center;
+      grid-column: 1 / -1;
+    }
+
+    .ml-panel {
+      border: 1px solid #6a2429;
+      background: linear-gradient(130deg, #281719, #202020);
+      padding: 25px;
+      border-radius: 10px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 25px 5%;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 950px) {
+      .movie-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .header { flex-wrap: wrap; gap: 12px; }
+      .nav { order: 3; flex-basis: 100%; }
+    }
+
+    @media (max-width: 560px) {
+      .header { padding: 12px 4%; }
+      .logo { font-size: 21px; }
+      .nav { gap: 13px; }
+      .nav a, .nav button { font-size: 12px; }
+      .search { width: 100%; }
+      .hero { min-height: 340px; padding: 60px 5% 35px; }
+      main { padding: 15px 4% 35px; }
+      .movie-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .poster { min-height: 160px; font-size: 19px; }
+      .movie-info { padding: 9px; }
+      .preferences { grid-template-columns: 1fr; }
+      h2 { font-size: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <div class="logo">CINEMATCH</div>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#home">Home</a>
+      <a href="#discover">Discover</a>
+      <a href="#recommend">For You</a>
+      <a href="#watchlist">My List</a>
+
+      <button class="ml-link"
+        onclick="window.open('/ml', '_blank', 'noopener')">
+        ML Lab ↗
+      </button>
+    </nav>
+
+    <input class="search" id="searchInput" type="search"
+      placeholder="Search movies..." aria-label="Search movies">
+  </header>
+
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <div class="eyebrow">YOUR PERSONAL MOVIE GUIDE</div>
+      <h1>Find your<br>next favourite.</h1>
+      <p>
+        Discover Indian cinema across Bollywood and South Indian films.
+        Explore movies and find films that match your preferences.
+      </p>
+      <button class="button primary"
+        onclick="document.getElementById('discover').scrollIntoView({behavior:'smooth'})">
+        ▶ Explore Movies
+      </button>
+      <button class="button secondary"
+        onclick="document.getElementById('recommend').scrollIntoView({behavior:'smooth'})">
+        Get Recommendations
+      </button>
+    </div>
+  </section>
+
+  <main>
+    <section class="section" id="discover">
+      <div class="section-title">
+        <h2>Discover Indian Movies</h2>
+        <span class="muted" id="movieCount"></span>
+      </div>
+
+      <div class="filters" id="genreFilters">
+        <button class="chip active" data-genre="All">All</button>
+        <button class="chip" data-genre="Action">Action</button>
+        <button class="chip" data-genre="Drama">Drama</button>
+        <button class="chip" data-genre="Comedy">Comedy</button>
+        <button class="chip" data-genre="Thriller">Thriller</button>
+        <button class="chip" data-genre="Romance">Romance</button>
+        <button class="chip" data-genre="Sci-Fi">Sci-Fi</button>
+      </div>
+
+      <div class="movie-grid" id="movieGrid"></div>
+    </section>
+
+    <section class="section" id="recommend">
+      <div class="section-title">
+        <h2>Recommendations For You</h2>
+      </div>
+
+      <div class="panel">
+        <p class="muted">
+          Choose your favourite genre, language and minimum rating.
+        </p>
+
+        <div class="preferences">
+          <label>
+            Favourite genre
+            <select id="prefGenre">
+              <option value="All">Any genre</option>
+              <option>Action</option>
+              <option>Drama</option>
+              <option>Comedy</option>
+              <option>Thriller</option>
+              <option>Romance</option>
+              <option>Sci-Fi</option>
+            </select>
+          </label>
+
+          <label>
+            Language
+            <select id="prefLanguage">
+              <option value="All">All languages</option>
+              <option>Hindi</option>
+              <option>Telugu</option>
+              <option>Tamil</option>
+              <option>Malayalam</option>
+              <option>Kannada</option>
+            </select>
+          </label>
+
+          <label>
+            Minimum rating
+            <select id="prefRating">
+              <option value="0">Any rating</option>
+              <option value="7">7.0+</option>
+              <option value="8">8.0+</option>
+              <option value="9">9.0+</option>
+            </select>
+          </label>
+        </div>
+
+        <button class="button red" id="recommendBtn">
+          Find My Movies
+        </button>
+
+        <div class="message" id="recommendMessage" aria-live="polite">
+          Select your preferences and click Find My Movies.
+        </div>
+
+        <div class="movie-grid" id="recommendGrid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="ml-lab">
+      <div class="ml-panel">
+        <h2>Machine Learning Lab</h2>
+        <p class="muted">
+          Open the separate ML application connected to your Flask backend
+          and movie CSV dataset.
+        </p>
+        <button class="button red"
+          onclick="window.open('/ml', '_blank', 'noopener')">
+          Launch ML Application ↗
+        </button>
+      </div>
+    </section>
+
+    <section class="section" id="watchlist">
+      <div class="section-title">
+        <h2>My Watchlist</h2>
+        <span class="muted">Your saved movies</span>
+      </div>
+      <div class="movie-grid" id="watchlistGrid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>CINEMATCH</strong> · Indian Movie Discovery<br>
+    Movie ratings in this demo are illustrative.
+  </footer>
+
+  <script>
+    const movies = [
+      {id:1,title:"3 Idiots",year:2009,genre:"Comedy",language:"Hindi",rating:8.4,emoji:"🎓"},
+      {id:2,title:"Dangal",year:2016,genre:"Drama",language:"Hindi",rating:8.3,emoji:"🤼"},
+      {id:3,title:"Drishyam",year:2015,genre:"Thriller",language:"Hindi",rating:8.2,emoji:"🔍"},
+      {id:4,title:"Baahubali: The Beginning",year:2015,genre:"Action",language:"Telugu",rating:8.0,emoji:"⚔️"},
+      {id:5,title:"RRR",year:2022,genre:"Action",language:"Telugu",rating:7.8,emoji:"🔥"},
+      {id:6,title:"Kantara",year:2022,genre:"Thriller",language:"Kannada",rating:8.2,emoji:"🌿"},
+      {id:7,title:"Jai Bhim",year:2021,genre:"Drama",language:"Tamil",rating:8.7,emoji:"⚖️"},
+      {id:8,title:"Sita Ramam",year:2022,genre:"Romance",language:"Telugu",rating:8.5,emoji:"💌"},
+      {id:9,title:"Premam",year:2015,genre:"Romance",language:"Malayalam",rating:8.3,emoji:"❤️"},
+      {id:10,title:"Munna Bhai M.B.B.S.",year:2003,genre:"Comedy",language:"Hindi",rating:8.1,emoji:"🩺"},
+      {id:11,title:"Andhadhun",year:2018,genre:"Thriller",language:"Hindi",rating:8.2,emoji:"🎹"},
+      {id:12,title:"Vikram",year:2022,genre:"Action",language:"Tamil",rating:8.3,emoji:"🕶️"},
+      {id:13,title:"Zindagi Na Milegi Dobara",year:2011,genre:"Drama",language:"Hindi",rating:8.2,emoji:"🌊"},
+      {id:14,title:"Super Deluxe",year:2019,genre:"Drama",language:"Tamil",rating:8.2,emoji:"🎭"},
+      {id:15,title:"PK",year:2014,genre:"Sci-Fi",language:"Hindi",rating:8.1,emoji:"👽"},
+      {id:16,title:"KGF: Chapter 1",year:2018,genre:"Action",language:"Kannada",rating:8.2,emoji:"⛏️"},
+      {id:17,title:"Queen",year:2013,genre:"Comedy",language:"Hindi",rating:8.1,emoji:"👑"},
+      {id:18,title:"96",year:2018,genre:"Romance",language:"Tamil",rating:8.5,emoji:"📷"},
+      {id:19,title:"Bangalore Days",year:2014,genre:"Drama",language:"Malayalam",rating:8.3,emoji:"🏙️"},
+      {id:20,title:"Tumbbad",year:2018,genre:"Thriller",language:"Hindi",rating:8.2,emoji:"🌑"}
+    ];
+
+    let activeGenre = "All";
+    let searchTerm = "";
+    let watchlist = [];
+
+    try {
+      watchlist = JSON.parse(
+        localStorage.getItem("cinematch-watchlist") || "[]"
+      );
+      if (!Array.isArray(watchlist)) watchlist = [];
+    } catch (error) {
+      watchlist = [];
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, ch => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+      })[ch]);
+    }
+
+    function movieCard(movie) {
+      const saved = watchlist.includes(movie.id);
+
+      return `
+        <article class="movie">
+          <div class="poster">${escapeHTML(movie.emoji)}<br>
+            ${escapeHTML(movie.title)}
+          </div>
+          <div class="movie-info">
+            <h3>${escapeHTML(movie.title)}</h3>
+            <div class="movie-meta">
+              ${movie.year} · ${escapeHTML(movie.language)}
+            </div>
+            <div class="movie-meta">${escapeHTML(movie.genre)}</div>
+            <p class="rating">★ ${movie.rating.toFixed(1)} / 10</p>
+            <div class="movie-actions">
+              <button class="small-btn"
+                onclick="toggleWatchlist(${movie.id})">
+                ${saved ? "✓ Saved" : "+ My List"}
+              </button>
+              <button class="small-btn"
+                onclick="recommendSimilar(${movie.id})">
+                Similar
+              </button>
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function renderMovies() {
+      const filtered = movies.filter(movie => {
+        const genreOK =
+          activeGenre === "All" || movie.genre === activeGenre;
+
+        const searchOK =
+          (movie.title + " " + movie.language + " " + movie.genre)
+            .toLowerCase().includes(searchTerm.toLowerCase());
+
+        return genreOK && searchOK;
+      });
+
+      document.getElementById("movieGrid").innerHTML = filtered.length
+        ? filtered.map(movieCard).join("")
+        : '<div class="empty">No movies match your search.</div>';
+
+      document.getElementById("movieCount").textContent =
+        `${filtered.length} movies`;
+    }
+
+    function renderWatchlist() {
+      const savedMovies = movies.filter(movie =>
+        watchlist.includes(movie.id)
+      );
+
+      document.getElementById("watchlistGrid").innerHTML =
+        savedMovies.length
+          ? savedMovies.map(movieCard).join("")
+          : '<div class="empty">Your watchlist is empty. Add movies using + My List.</div>';
+    }
+
+    function toggleWatchlist(id) {
+      watchlist = watchlist.includes(id)
+        ? watchlist.filter(savedId => savedId !== id)
+        : [...watchlist, id];
+
+      try {
+        localStorage.setItem(
+          "cinematch-watchlist",
+          JSON.stringify(watchlist)
+        );
+      } catch (error) {}
+
+      renderMovies();
+      renderWatchlist();
+      renderRecommendationsIfShown();
+    }
+
+    function getRecommendations() {
+      const genre = document.getElementById("prefGenre").value;
+      const language = document.getElementById("prefLanguage").value;
+      const rating = Number(document.getElementById("prefRating").value);
+
+      return movies
+        .filter(movie => genre === "All" || movie.genre === genre)
+        .filter(movie => language === "All" || movie.language === language)
+        .filter(movie => movie.rating >= rating)
+        .sort((a, b) => b.rating - a.rating);
+    }
+
+    function renderRecommendations() {
+      const results = getRecommendations();
+
+      document.getElementById("recommendMessage").textContent =
+        results.length
+          ? `Found ${results.length} movies matching your preferences.`
+          : "No matches found. Try changing your preferences.";
+
+      document.getElementById("recommendGrid").innerHTML =
+        results.length
+          ? results.map(movieCard).join("")
+          : '<div class="empty">Try another genre or language.</div>';
+    }
+
+    function renderRecommendationsIfShown() {
+      if (document.getElementById("recommendGrid").innerHTML.trim()) {
+        renderRecommendations();
+      }
+    }
+
+    function recommendSimilar(id) {
+      const selected = movies.find(movie => movie.id === id);
+      if (!selected) return;
+
+      document.getElementById("prefGenre").value = selected.genre;
+      document.getElementById("prefLanguage").value = "All";
+      document.getElementById("prefRating").value = "0";
+
+      renderRecommendations();
+
+      document.getElementById("recommend").scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
+    document.getElementById("genreFilters").addEventListener(
+      "click", event => {
+        const button = event.target.closest("[data-genre]");
+        if (!button) return;
+
+        activeGenre = button.dataset.genre;
+
+        document.querySelectorAll("#genreFilters .chip").forEach(chip => {
+          chip.classList.toggle("active", chip === button);
+        });
+
+        renderMovies();
+      }
+    );
+
+    document.getElementById("searchInput").addEventListener(
+      "input", event => {
+        searchTerm = event.target.value.trim();
+        renderMovies();
+      }
+    );
+
+    document.getElementById("recommendBtn").addEventListener(
+      "click", renderRecommendations
+    );
+
+    renderMovies();
+    renderWatchlist();
+  </script>
+</body>
+</html>
